@@ -2,7 +2,7 @@
 # measure of the combining capacity with other atoms,
 from requests import Request, Session, exceptions
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-import json
+import json, os
 
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 parameters = {
@@ -13,7 +13,7 @@ parameters = {
 
 header = {
     'Accepts':'application/json',
-    'X-CMC_PRO_API_KEY':'${{ secrets.VAL_CMC_API }}'
+    'X-CMC_PRO_API_KEY':os.getenv('VAL_CMC_API') # Call API VIA EnvVar
 }
 
 session = Session()
