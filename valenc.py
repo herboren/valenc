@@ -8,7 +8,7 @@ import json, os, pprint
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 parameters = {
     'start':'1',
-    'limit':'100',
+    'limit':'1000',
     'convert':'USD'
 }
 
@@ -20,19 +20,21 @@ header = {
 session = Session()
 session.headers.update(header)
 
-acronyms = "btc,ada,dot,eth,atom"
+acronyms = input("Input top 5 coins separated by comma\nto search (btc,ada,dot,eth,atom): ")
 acronyms = acronyms.split(',')
 
 try:    
-    kvp = {}
+    kvp = []
     response = session.get(url, params=parameters)
     data = json.loads(response.text)
     # Lets get symbolic data compare to elements   
     for entry in data['data']:
         for el in acronyms:
             if el.upper() == entry['symbol']:                
-                kvp[entry['symbol']] = entry['quote']['USD']['price']                                                
-    for k, v in kvp.items():
-            print("Symbol: {}, Price: ${:.2f}".format(k,v))
+                kvp.append((entry['cmc_rank'], entry['symbol'], entry['quote']['USD']['price']))
+
+    # Show Dictionary                                          
+    for r,s,p in kvp:    
+            print("Rank #: {:0>2} Symbol: {}, Price: ${:.2f}".format(r,s,p))
 except (ConnectionError, Timeout, TooManyRedirects) as ex:
     print(ex)
