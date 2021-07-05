@@ -69,8 +69,8 @@ for k,v in param_list.items():
         count -= 1        
 
 # Save settings?
-usrInput = input("Would you like to save your settings?")
-if usrInput == 'Yes':
+usrInput = input("Would you like to save your settings?: ")
+if usrInput.lower() == 'yes' or usrInput.lower() == 'y' :
     for k,v in parameters.items():
         config['USER'] = { k:v }
 
