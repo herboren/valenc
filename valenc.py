@@ -4,7 +4,6 @@ from requests import Request, Session, exceptions
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json, os, pprint
 
-
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 
 parameters = {}
@@ -54,8 +53,7 @@ for k,v in param_list.items():
         os.system('cls')
 
         # Show params left to assign
-        count -= 1
-        
+        count -= 1        
 
 header = {
     'Accepts':'application/json',
