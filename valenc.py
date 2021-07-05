@@ -5,9 +5,7 @@ from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json, os, pprint
 
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
-
 parameters = {}
-
 param_list = {
     'start':'(int) Optionally offset the start (1-based index) of the paginated list of items to return.',
     'limit':'(int) Optionally specify the number of results to return. Use this parameter and the "start" parameter\nto determine your own pagination size.',    
@@ -62,7 +60,6 @@ header = {
 
 session = Session()
 session.headers.update(header)
-
 acronyms = input("Input top 5 coins separated by comma\nto search (btc,ada,dot,eth,atom): ")
 acronyms = acronyms.split(',')
 
