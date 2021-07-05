@@ -6,10 +6,28 @@ import json, os, pprint
 
 
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+
 parameters = {
-    'start':'1',
-    'limit':'1000',
-    'convert':'USD'
+    'start':'1',                   # int
+    'limit':'1000',                # int
+    'convert':'USD',               # int
+    'price_min': 0,                # int
+    'price_max':100000,              # int
+    #'market_cap_min':'',           # int
+    #'market_cap_max':'',           # int
+    #'volume_24h_min':'',           # int
+    #'volume_24h_max':'',           # int
+    #'circulating_supply_min':'',   # int
+    #'circulating_supply_max':'',   # int
+    #'percent_change_24h_min':'',   # int
+    #'percent_change_24h_max':'',   # int
+    #'convert':'',                  # string
+    #'convert_id':'',               # string
+    #'sort':'',                     # string
+    #'sort_dir':'',                 # string
+    #'cryptocurrency_type':'',      # string
+    #'tag':'',                      # string
+    #'aux':'',                      # string
 }
 
 header = {
