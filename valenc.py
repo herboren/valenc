@@ -8,10 +8,11 @@ url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 parameters = {}
 param_list = {
     'start':'(int) Optionally offset the start (1-based index) of the paginated list of items to return.',
-    'limit':'(int) Optionally specify the number of results to return. Use this parameter and the "start" parameter\nto determine your own pagination size.',    
+    'limit':'(int) Optionally specify the number of results to return.',    
     'price_min':'(int) Optionally specify a threshold of minimum USD price to filter results by.',
     'price_max':'(int) Optionally specify a threshold of maximum USD price to filter results by.',
-    'market_cap_min':'(int) Optionally specify a threshold of minimum market cap to filter results by.',
+    'market_cap_min':
+    '(int) Optionally specify a threshold of minimum market cap to filter results by.',
     'market_cap_max':'(int) Optionally specify a threshold of maximum market cap to filter results by.',
     'volume_24h_min':'(int) Optionally specify a threshold of minimum 24 hour USD volume to filter results by.',
     'volume_24h_max':'(int) Optionally specify a threshold of maximum 24 hour USD volume to filter results by.',
@@ -19,7 +20,7 @@ param_list = {
     'circulating_supply_max':'(int) Optionally specify a threshold of maximum circulating supply to filter results by.',
     'percent_change_24h_min':'(int) Optionally specify a threshold of minimum 24 hour percent change to filter results by.',
     'percent_change_24h_max':'(int) Optionally specify a threshold of maximum 24 hour percent change to filter results by.',
-    'convert':'(string) Optionally calculate market quotes in up to 120 currencies at once by passing a comma-separated\nlist of cryptocurrency or fiat currency symbols. Each additional convert option beyond the first requires an additional call credit. A list of supported fiat options can be found here. Each conversion is returned in its own "quote" object.',
+    'convert':'(string) Optionally calculate market quotes in up to 120 currencies at once by passing a comma-separated\n',
     'convert_id':'(string) Optionally calculate market quotes by CoinMarketCap ID instead of symbol. This option is identical\nto convert outside of ID format. Ex: convert_id=1,2781 would replace convert=BTC,USD in your query. This parameter cannot be used when convert is used.',
     'sort':'(string) What field to sort the list of cryptocurrencies by',
     'sort_dir':'(string) The direction in which to order cryptocurrencies against the specified sort.',
