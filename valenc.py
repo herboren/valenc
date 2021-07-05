@@ -83,3 +83,17 @@ try:
             print("Rank #: {:0>2} Symbol: {}, Price: ${:.2f}".format(r,s,p))
 except (ConnectionError, Timeout, TooManyRedirects) as ex:
     print(ex)
+
+# Output:
+#
+# (19/19) param: start
+# Description: (int) Optionally offset the start (1-based index) of the paginated list of items to return.
+# start: 1
+#
+# Input top 5 coins separated by comma
+# to search (btc,ada,dot,eth,atom): btc,ada,dot,eth,atom
+# Rank #: 01 Symbol: BTC, Price: $34225.44
+# Rank #: 02 Symbol: ETH, Price: $2271.58
+# Rank #: 05 Symbol: ADA, Price: $1.42
+# Rank #: 09 Symbol: DOT, Price: $15.55
+# Rank #: 31 Symbol: ATOM, Price: $12.69
