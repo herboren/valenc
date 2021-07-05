@@ -2,10 +2,26 @@
 # measure of the combining capacity with other atoms,
 from requests import Request, Session, exceptions
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-import json, os, pprint
+import json, os, configparser
+
+config = configparser.ConfigParser()
+
+# Create default config
+config['DEFAULT'] = {
+    'start':'1',
+    'limit':'100',
+    'price_min':'0',
+    'price_max':'500000'
+}
+
+# Save config
+with open('settings.ini', 'w') as configfile:
+    config.write(configfile)
 
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 parameters = {}
+
+# Parameter Help
 param_list = {
     'start':'(int) Optionally offset the start (1-based index) of the paginated list of items to return.',
     'limit':'(int) Optionally specify the number of results to return.',    
@@ -20,7 +36,7 @@ param_list = {
     'circulating_supply_max':'(int) Optionally specify a threshold of maximum circulating supply to filter results by.',
     'percent_change_24h_min':'(int) Optionally specify a threshold of minimum 24 hour percent change to filter results by.',
     'percent_change_24h_max':'(int) Optionally specify a threshold of maximum 24 hour percent change to filter results by.',
-    'convert':'(string) Optionally calculate market quotes in up to 120 currencies at once by passing a comma-separated\n',
+    'convert':'(string) Optionally calculate market quotes in up to 120 currencies at once by passing a comma-separated',
     'convert_id':'(string) Optionally calculate market quotes by CoinMarketCap ID instead of symbol. This option is identical\nto convert outside of ID format. Ex: convert_id=1,2781 would replace convert=BTC,USD in your query. This parameter cannot be used when convert is used.',
     'sort':'(string) What field to sort the list of cryptocurrencies by',
     'sort_dir':'(string) The direction in which to order cryptocurrencies against the specified sort.',
@@ -28,12 +44,12 @@ param_list = {
     'tag':'(string) The tag of cryptocurrency to include.',
     'aux':'(string) Optionally specify a comma-separated list of supplemental data fields to return.',
 }
-# Get Param list count
+# Get param list count
 count = len(param_list)
 
 # Get messages, pitch parameter to assign
 for k,v in param_list.items():    
-        print("({}/{}) param: {}\nDescription: {}".format(count, len(param_list),k,v))
+        print("\n({}/{}) param: {}\nDescription: {}".format(count, len(param_list),k,v))
         
         # If empty input, skip param, go next
         if 'int' in v:
@@ -48,11 +64,19 @@ for k,v in param_list.items():
                 parameters[k] = inpt
             else:
                 next
-        # Clean up screen peer param description     
-        os.system('cls')
-
+        
         # Show params left to assign
         count -= 1        
+
+# Save settings?
+usrInput = input("Would you like to save your settings?")
+if usrInput == 'Yes':
+    for k,v in parameters.items():
+        config['USER'] = { k:v }
+
+# Save settings to present config
+with open('settings.ini', 'w') as configfile:
+    config.write(configfile)
 
 header = {
     'Accepts':'application/json',
