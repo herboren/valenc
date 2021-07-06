@@ -1,7 +1,11 @@
-import json, os, configparser
+import configparser
+from dataclasses import dataclass
 
+@dataclass
 class Parameters():
-    
+    #def __init__(self, start: int, limit: int, price_min: 0, price_max: 100000):
+        #parameters
+        
     config = configparser.ConfigParser()
     # Create default config
     config['DEFAULT'] = {
@@ -10,6 +14,14 @@ class Parameters():
         'price_min':'0',
         'price_max':'500000'
     }
+
+        # Save config
+    with open('settings.ini', 'w') as configfile:
+        config.write(configfile)
+
+    # User parameters
+    def uparam():
+        usrparams = {}
 
     # Parameter Help
     param_list = {
@@ -34,6 +46,13 @@ class Parameters():
         'aux':'(string) Optionally specify a comma-separated list of supplemental data fields to return.',
     }
 
-    # Save config
-#with open('settings.ini', 'w') as configfile:
-    #config.write(configfile)
+    def saveUserConfig(para, conf):
+        # Save settings?
+        usrInput = input("Would you like to save your settings?: ")
+        if usrInput.lower() == 'yes' or usrInput.lower() == 'y' :
+            for k,v in para.items():
+                conf['USER'] = { k:v }
+            
+        # Save settings to present config
+        with open('settings.ini', 'w') as configfile:
+            conf.write(configfile)

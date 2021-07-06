@@ -2,46 +2,40 @@
 # measure of the combining capacity with other atoms,
 from requests import Request, Session, exceptions
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-import json, os, configparser, prmtrs, colorama
+import json, os, prmtrs
+from colorama import Fore
 
 p = prmtrs.Parameters()
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 
-parameters = {}
-
 # Get param list count
 count = len(p.param_list)
 
-# Get messages, pitch parameter to assign
-for k,v in p.param_list.items():    
-        print("\n({}/{}) param: {}\nDescription: {}".format(count, len(p.param_list),k,v))
-        
-        # If empty input, skip param, go next
-        if 'int' in v:
-            inpt = input("{}: ".format(k))
-            if inpt != '':
-                parameters[k] = int(inpt)
+option = input("Load default parameters or saved? (def, sav): ")
+if option.lower() == 'sav':
+    if len(p.uparam.usrparams) == 0:
+        print(Fore.RED + "User parameters not found, input parameters below." + Fore.WHITE)
+        # Get messages, pitch parameter to assign, empty params will be discarded
+        for k,v in p.param_list.items():    
+            print("\n({}/{}) param: {}\nDescription: {}".format(count, len(p.param_list),k,v))        
+            # If empty input, skip param, go next
+            if 'int' in v:
+                inpt = input("{}: ".format(k))
+                if inpt != '':
+                    p.usrparams[k] = int(inpt)
+                else:
+                    next                
             else:
-                next                
-        else:
-            inpt = input("{}: ".format(k))
-            if inpt != '':
-                parameters[k] = inpt
-            else:
-                next
-        
-        # Show params left to assign
-        count -= 1        
-
-# Save settings?
-#usrInput = input("Would you like to save your settings?: ")
-#if usrInput.lower() == 'yes' or usrInput.lower() == 'y' :
-    #for k,v in parameters.items():
-        #config['USER'] = { k:v }
-
-# Save settings to present config
-#with open('settings.ini', 'w') as configfile:
-    #config.write(configfile)
+                inpt = input("{}: ".format(k))
+                if inpt != '':
+                    p.usrparams[k] = inpt
+                else:
+                    next        
+            # Show params left to assign
+            count -= 1       
+# Pitch user save
+p.saveUserConfig(p.func,p.config)
+#else:
 
 header = {
     'Accepts':'application/json',
@@ -55,7 +49,7 @@ acronyms = acronyms.split(',')
 
 try:    
     kvp = []
-    response = session.get(url, params=parameters)
+    response = session.get(url, params=p.parameters)
     data = json.loads(response.text)
     # Lets get symbolic data compare to elements   
     for entry in data['data']:
