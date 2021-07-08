@@ -1,45 +1,62 @@
 # In chemsitry the valency of an and element is the
 # measure of the combining capacity with other atoms,
+import configparser
+from param import Param
+from usrconf import Conf
+from colorama.ansi import Style
 from requests import Request, Session, exceptions
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-import json, os, prmtrs
+import json, os, sys, getopt
 from colorama import Fore
 
-p = prmtrs.Parameters()
-url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+def main():
+    p = Param()
+    c = Conf()
+    try:
+        opts, args = getopt.getopt(sys.argv[1:],['-h','-d','-u'],)
+    except getopt.GetoptError:        
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ['-h']:
+            c.saveconf('yes')
+        if opt in ['-d']:
+            c.saveconf('no')
+            #getcoininfo(cnstr_url(arg,p))
+        if opt in ['-u']:
+            c.saveconf('yes')
+             #getcoininfo(cnstr_url(arg,p))
 
-# Get param list count
-count = len(p.param_list)
+if __name__ == "__main__":
+    main()
 
-option = input("Load default parameters or saved? (def, sav): ")
-if option.lower() == 'sav':
-    if len(p.uparam.usrparams) == 0:
-        print(Fore.RED + "User parameters not found, input parameters below." + Fore.WHITE)
-        # Get messages, pitch parameter to assign, empty params will be discarded
-        for k,v in p.param_list.items():    
-            print("\n({}/{}) param: {}\nDescription: {}".format(count, len(p.param_list),k,v))        
-            # If empty input, skip param, go next
-            if 'int' in v:
-                inpt = input("{}: ".format(k))
-                if inpt != '':
-                    p.usrparams[k] = int(inpt)
-                else:
-                    next                
-            else:
-                inpt = input("{}: ".format(k))
-                if inpt != '':
-                    p.usrparams[k] = inpt
-                else:
-                    next        
-            # Show params left to assign
-            count -= 1       
-# Pitch user save
-p.saveUserConfig(p.func,p.config)
-#else:
+
+# Construct URL
+def cnstr_url(arg, params):    
+    conf = configparser.ConfigParser()
+    url = ['https://pro-api.<redacted>.com/v1/cryptocurrency/listings/latest?']
+
+    if arg == '-default':
+        for attr, value in vars(params).items():
+            if type(value) == int:
+                if (int(value) > -1):
+                    url.append("{}={}".format(attr, value))
+            if type(value) == str:
+                if (str(value) != ''):
+                    url.append("{}={}".format(attr, value))
+    elif arg == '-user':
+        conf.read('settings.ini')
+        for sec in conf.sections():
+            for attr, val in conf.items(sec):
+                print(attr, " ", val)
+
+    
+
+    return '&'.join(url)
+
 
 header = {
-    'Accepts':'application/json',
-    'X-CMC_PRO_API_KEY':os.getenv('VAL_CMC_API') # Call API VIA EnvVar
+        'Accepts':'application/json',
+        'X-CMC_PRO_API_KEY': os.environ.get('VAL_CMC_API')
 }
 
 session = Session()
