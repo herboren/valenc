@@ -9,25 +9,11 @@ from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json, os, sys, getopt
 from colorama import Fore
 
-def main():
-    p = Param()
-    c = Conf()
-    try:
-        opts, args = getopt.getopt(sys.argv[1:],['-h','-d','-u'],)
-    except getopt.GetoptError:        
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt in ['-h']:
-            c.saveconf('yes')
-        if opt in ['-d']:
-            c.saveconf('no')
-            #getcoininfo(cnstr_url(arg,p))
-        if opt in ['-u']:
-            c.saveconf('yes')
-             #getcoininfo(cnstr_url(arg,p))
 
-if __name__ == "__main__":
-    main()
+c.saveconf('yes')
+if opt in ['-d']:
+c.saveconf('no')
+#getcoininfo(cnstr_url(arg,p))
 
 
 # Construct URL
