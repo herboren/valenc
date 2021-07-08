@@ -17,26 +17,28 @@ if not Path('settings.ini').is_file():
 #getcoininfo(cnstr_url(arg,p))
 
 # Construct URL
-def cnstr_url(arg, params):    
+def cnstr_url():    
     conf = configparser.ConfigParser()
     url = ['https://pro-api.<redacted>.com/v1/cryptocurrency/listings/latest?']
 
-    if arg == '-default':
-        for attr, value in vars(params).items():
-            if type(value) == int:
-                if (int(value) > -1):
-                    url.append("{}={}".format(attr, value))
-            if type(value) == str:
-                if (str(value) != ''):
-                    url.append("{}={}".format(attr, value))
-    elif arg == '-user':
-        conf.read('settings.ini')
-        for sec in conf.sections():
-            for attr, val in conf.items(sec):
-                print(attr, " ", val)    
+    # Pass user config to parameters
+    conf.read('settings.ini')
+    for sec in conf.sections():
+        for attr, val in conf.items(sec):
+            print(attr, " ", val)   
+
+    
+    for attr, value in vars(params).items():
+        if type(value) == int:
+            if (int(value) > -1):
+                url.append("{}={}".format(attr, value))
+        if type(value) == str:
+            if (str(value) != ''):
+                url.append("{}={}".format(attr, value))
 
     return '&'.join(url)
 
+cnstr_url()
 
 header = {
         'Accepts':'application/json',
