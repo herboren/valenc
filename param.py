@@ -64,4 +64,4 @@ class Param:
     aux: str = ''
 
     # API From Envar
-    CMC_PRO_API_KEY: str = os.environ.get('VAL_CMC_API')
+    CMC_PRO_API_KEY: str = ''

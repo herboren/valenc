@@ -1,20 +1,20 @@
 # In chemsitry the valency of an and element is the
 # measure of the combining capacity with other atoms,
 import configparser
+from pathlib import Path
 from param import Param
 from usrconf import Conf
 from colorama.ansi import Style
 from requests import Request, Session, exceptions
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-import json, os, sys, getopt
+import json, os
 from colorama import Fore
 
+# Create settings for user on run
+if not Path('settings.ini').is_file():
+    conf = Conf().saveconf()
 
-c.saveconf('yes')
-if opt in ['-d']:
-c.saveconf('no')
 #getcoininfo(cnstr_url(arg,p))
-
 
 # Construct URL
 def cnstr_url(arg, params):    
@@ -33,9 +33,7 @@ def cnstr_url(arg, params):
         conf.read('settings.ini')
         for sec in conf.sections():
             for attr, val in conf.items(sec):
-                print(attr, " ", val)
-
-    
+                print(attr, " ", val)    
 
     return '&'.join(url)
 
