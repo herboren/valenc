@@ -10,12 +10,13 @@ class Conf():
 
         config = configparser.ConfigParser()  
 
-        # Assign default config
+        # Assign default config for basic output
         config['DEFAULT'] = {
             'start': 1,
             'limit': 10,
             'price_min': 0,
-            'price_max': 100000            
+            'price_max': 100000,     
+            'CMC_PRO_API_KEY': 'VAL_CMC_API'
         }
 
         # Write custom params            

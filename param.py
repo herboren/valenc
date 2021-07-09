@@ -1,44 +1,43 @@
 from dataclasses import dataclass
-import os
     
 @dataclass
 class Param:
     
     # start index of the returned paginated list
-    start: int = 1
+    start: str = ''
   
     # number of results to return
-    limit: int = 1000
+    limit: str = ''
   
     # threshold of minimum USD price
-    price_min: int = 0
+    price_min: str = ''
   
     # threshold of maximum USD price
-    price_max: int = 100000
+    price_max: str = ''
   
     # threshold of minimum market cap
-    market_cap_min: int = -1
+    market_cap_min: str = ''
    
     # threshold of maximum market cap
-    market_cap_max: int = -1
+    market_cap_max: str = ''
    
     # threshold of minimum 24 hour USD volume
-    volume_24h_min: int = -1
+    volume_24h_min: str = ''
    
     # threshold of maximum 24 hour USD volume
-    volume_24h_max: int = -1
+    volume_24h_max: str = ''
    
     # threshold of minimum circulating supply
-    circulating_supply_min: int = -1
+    circulating_supply_min: str = ''
    
     # threshold of maximum circulating supply
-    circulating_supply_max: int = -1
+    circulating_supply_max: str = ''
     
     # threshold of minimum 24 hour percent change
-    percent_change_24h_min: int = -1
+    percent_change_24h_min: str = ''
     
     # threshold of maximum 24 hour percent change
-    percent_change_24h_max: int = -1
+    percent_change_24h_max: str = ''
     
     # a comma-separated list of cryptocurrency or fiat currency symbols
     # NOTE: This parameter cannot be used when convert_id is used.
