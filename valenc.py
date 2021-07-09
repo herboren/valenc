@@ -19,20 +19,18 @@ def confparams():
     
     for section in conf.sections():
         # Assign user parameters if present
-        #if section == 'USER':
-        #    for sattrb, svalue in conf.items(section):
-        #        if svalue != '' :
-        #            entry[sattrb]=svalue
+        if section == 'USER':
+            for sattrb, svalue in conf.items(section):
+                if not svalue:
+                    entry[sattrb]=svalue
         
         # Assign default parameters if no user paramters
-        if section == 'DEFAULT':
-            print("Section: ",section)
+        if section == 'DEFAULT':            
             for sattrb, svalue in conf.items(section):
-                if svalue != '' :
+                if not svalue:
                     entry[sattrb]=svalue
     
-    # Return Params to print                    
-    print("ENTRY: ",entry)
+    # Return Params to print                        
     return entry
 
 # Construct URL
@@ -41,8 +39,8 @@ def cnstr_url(uparam):
 
     # Add parameterized elements        
     for attr, value in uparam.items():
-        if attr == 'CMC_PRO_API_KEY':
-            url.append("{}={}".format(attr, os.environ.get(value)))        
+        if attr == 'cmc_pro_api_key':
+            url.append("{}={}".format(attr.upper(), os.environ.get(value)))        
         else:
             url.append("{}={}".format(attr, value))        
     
@@ -56,7 +54,7 @@ def cnstr_hdr(uparam):
     header = {}  
 
     for attrib, value in uparam.items():
-        if attrib == 'CMC_PRO_API_KEY':
+        if attrib == 'cmc_pro_api_key':
             header = {
                 'Accepts':'application/json',
                 'X-CMC_PRO_API_KEY': os.environ.get(value)
@@ -73,8 +71,6 @@ def getresponse(response):
         kvp = []
         
         data = json.loads(response.text)
-        print(data)
-        
         # Get users coin request
         #acronyms = input("Input top 5 coins separated by comma\nto search (btc,ada,dot,eth,atom): ")
         #acronyms = acronyms.split(',')
