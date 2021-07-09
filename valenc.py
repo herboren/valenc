@@ -21,24 +21,23 @@ def confparams():
         # Assign user parameters if present
         if section == 'USER':
             for sattrb, svalue in conf.items(section):
-                if not svalue:
+                if svalue != '':
                     entry[sattrb]=svalue
         
         # Assign default parameters if no user paramters
-        if section == 'DEFAULT':            
-            for sattrb, svalue in conf.items(section):
-                if not svalue:
+        elif section == 'FUNCTION':            
+            for sattrb, svalue in conf.items(section):                
                     entry[sattrb]=svalue
     
     # Return Params to print                        
     return entry
 
 # Construct URL
-def cnstr_url(uparam):
+def cnstr_url(entry):
     url = ['https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?']
 
     # Add parameterized elements        
-    for attr, value in uparam.items():
+    for attr, value in entry.items():
         if attr == 'cmc_pro_api_key':
             url.append("{}={}".format(attr.upper(), os.environ.get(value)))        
         else:
@@ -48,9 +47,6 @@ def cnstr_url(uparam):
     return '&'.join(url).replace('?&','?')
 
 def cnstr_hdr(uparam):      
-    
-    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?'    
-    session = Session()
     header = {}  
 
     for attrib, value in uparam.items():
@@ -60,20 +56,22 @@ def cnstr_hdr(uparam):
                 'X-CMC_PRO_API_KEY': os.environ.get(value)
             }
 
-    # Update session headers
-    session.headers.update(header)
-    return session.get(url, params=confparams())
+    return header
 
 
-def getresponse(response):    
-    
+def getresponse(header, uparam):       
+    session = Session()
+    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?'
+    session.headers.update(header) 
+    response = session.get(url, params=uparam)   
+
     try:    
         kvp = []
         
         data = json.loads(response.text)
         # Get users coin request
-        #acronyms = input("Input top 5 coins separated by comma\nto search (btc,ada,dot,eth,atom): ")
-        #acronyms = acronyms.split(',')
+        acronyms = input("Input top 5 coins separated by comma\nto search (btc,ada,dot,eth,atom): ")
+        acronyms = acronyms.split(',')
 
         # Lets get symbolic data compare to elements   
         for entry in data['data']:
@@ -88,8 +86,7 @@ def getresponse(response):
                                 entry['quote']['USD']['percent_change_7d'],
                                 entry['quote']['USD']['last_updated']))
 
-        # Create string value, append changes before printing final string
-        
+        # Create string value, append changes before printing final string        
         for a,b,c,d,e,f,g,h in kvp:   
             
             if (int(e) or int(f) or int(g) < 0): # Formatting needs ficing on Up/Down for time values
@@ -99,5 +96,5 @@ def getresponse(response):
     except (ConnectionError, Timeout, TooManyRedirects) as ex:
         print(ex)
 
-print("Real URL: ", cnstr_url(confparams()))
-getresponse(cnstr_hdr(confparams()))
+
+getresponse(cnstr_hdr, confparams())

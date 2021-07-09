@@ -11,7 +11,7 @@ class Conf():
         config = configparser.ConfigParser()  
 
         # Assign default config for basic output
-        config['DEFAULT'] = {
+        config['FUNCTION'] = {
             'start': 1,
             'limit': 10,
             'price_min': 0,
