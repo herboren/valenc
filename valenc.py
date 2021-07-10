@@ -1,11 +1,9 @@
 import configparser
 from pathlib import Path
 from usrconf import Conf
-from colorama.ansi import Style
 from requests import Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json, os
-from colorama import Fore
 
 # Create settings for user on first run
 if not Path('settings.ini').is_file():
@@ -46,55 +44,42 @@ def cnstr_url(entry):
     # Return user parameterized URL    
     return '&'.join(url).replace('?&','?')
 
-def cnstr_hdr(uparam):      
-    header = {}  
+header = {
+    'Accepts':'application/json',
+    'X-CMC_PRO_API_KEY': os.environ.get('VAL_CMC_API')
+}
 
-    for attrib, value in uparam.items():
-        if attrib == 'cmc_pro_api_key':
-            header = {
-                'Accepts':'application/json',
-                'X-CMC_PRO_API_KEY': os.environ.get(value)
-            }
+session = Session()
+url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?'
+session.headers.update(header)    
 
-    return header
-
-
-def getresponse(header, uparam):       
-    session = Session()
-    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?'
-    session.headers.update(header) 
-    response = session.get(url, params=uparam)   
-
-    try:    
-        kvp = []
+try:    
+    response = session.get(url, params=confparams())   
+    kvp = []
         
-        data = json.loads(response.text)
-        # Get users coin request
-        acronyms = input("Input top 5 coins separated by comma\nto search (btc,ada,dot,eth,atom): ")
-        acronyms = acronyms.split(',')
+    data = json.loads(response.text)
+    # Get users coin request
+    acronyms = input("Input top 5 coins separated by comma\nto search (btc,ada,dot,eth,atom): ")
+    acronyms = acronyms.split(',')
 
-        # Lets get symbolic data compare to elements   
-        for entry in data['data']:
-            for el in acronyms:
-                if el.upper() == entry['symbol']:                
-                    kvp.append((entry['cmc_rank'],
-                                entry['symbol'],
-                                entry['name'],
-                                entry['quote']['USD']['price'],
-                                entry['quote']['USD']['percent_change_1h'],
-                                entry['quote']['USD']['percent_change_24h'],
-                                entry['quote']['USD']['percent_change_7d'],
-                                entry['quote']['USD']['last_updated']))
+    # Lets get symbolic data compare to elements   
+    for entry in data['data']:
+        for el in acronyms:
+            if el.upper() == entry['symbol']:                
+                kvp.append((entry['cmc_rank'],
+                    entry['symbol'],
+                    entry['name'],
+                    entry['quote']['USD']['price'],
+                    entry['quote']['USD']['percent_change_1h'],
+                    entry['quote']['USD']['percent_change_24h'],
+                    entry['quote']['USD']['percent_change_7d'],
+                    entry['quote']['USD']['last_updated']))
 
         # Create string value, append changes before printing final string        
-        for a,b,c,d,e,f,g,h in kvp:   
-            
-            if (int(e) or int(f) or int(g) < 0): # Formatting needs ficing on Up/Down for time values
-                print("Rank: #{:0>2} Name [{}]: {} Price: ${:.2f} 1h ▼: {:.2f}% 24h ▼: {:.2f}% 7d ▼: {:.2f}% Last Updated: {}".format(a,b,c,d,e,f,g,h))
-            else:
-                print("Rank: #{:0>2} Name [{}]: {} Price: ${:.2f} 1h ▲: {:.2f}% 24h ▲: {:.2f}% 7d ▲: {:.2f}% Last Updated: {}".format(a,b,c,d,e,f,g,h))            
-    except (ConnectionError, Timeout, TooManyRedirects) as ex:
-        print(ex)
-
-
-getresponse(cnstr_hdr, confparams())
+    for a,b,c,d,e,f,g,h in kvp:   
+        if (int(e) or int(f) or int(g) < 0): # Formatting needs ficing on Up/Down for time values
+            print("Rank: #{:0>2} Name [{}]: {} Price: ${:.2f} 1h ▼: {:.2f}% 24h ▼: {:.2f}% 7d ▼: {:.2f}% Last Updated: {}".format(a,b,c,d,e,f,g,h))
+        else:
+            print("Rank: #{:0>2} Name [{}]: {} Price: ${:.2f} 1h ▲: {:.2f}% 24h ▲: {:.2f}% 7d ▲: {:.2f}% Last Updated: {}".format(a,b,c,d,e,f,g,h))            
+except (ConnectionError, Timeout, TooManyRedirects) as ex:
+    print(ex)
