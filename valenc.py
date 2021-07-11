@@ -9,6 +9,20 @@ import json, os
 if not Path('settings.ini').is_file():
     Conf().saveconf()
 
+# Construct URL, debugging only
+def cnstr_url(entry):
+    url = ['https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?']
+
+    # Add parameterized elements        
+    for attr, value in entry.items():
+        if attr == 'cmc_pro_api_key':
+            url.append("{}={}".format(attr.upper(), os.environ.get(value)))        
+        else:
+            url.append("{}={}".format(attr, value))        
+    
+    # Return user parameterized URL    
+    return '&'.join(url).replace('?&','?')
+
 # Import user parameters from settings.ini
 def confparams():    
     conf = configparser.ConfigParser()
@@ -29,20 +43,6 @@ def confparams():
     
     # Return Params to print                        
     return entry
-
-# Construct URL
-def cnstr_url(entry):
-    url = ['https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?']
-
-    # Add parameterized elements        
-    for attr, value in entry.items():
-        if attr == 'cmc_pro_api_key':
-            url.append("{}={}".format(attr.upper(), os.environ.get(value)))        
-        else:
-            url.append("{}={}".format(attr, value))        
-    
-    # Return user parameterized URL    
-    return '&'.join(url).replace('?&','?')
 
 header = {
     'Accepts':'application/json',

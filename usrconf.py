@@ -15,8 +15,7 @@ class Conf():
             'start': 1,
             'limit': 10,
             'price_min': 0,
-            'price_max': 100000,     
-            'CMC_PRO_API_KEY': 'VAL_CMC_API'
+            'price_max': 100000            
         }
 
         # Write custom params            
