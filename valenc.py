@@ -63,6 +63,13 @@ try:
     acronyms = acronyms.split(',')
 
     # Lets get symbolic data compare to elements   
+    """
+    Getting nested Entries:
+    for entry in data['data']:
+        entry['symbol'],
+        entry['quote']['USD']['price'],
+        entry['quote']['USD']['percent_change_7d'],
+    """
     for entry in data['data']:
         for el in acronyms:
             if el.upper() == entry['symbol']:                
@@ -78,8 +85,8 @@ try:
         # Create string value, append changes before printing final string        
     for a,b,c,d,e,f,g,h in kvp:   
         if (int(e) or int(f) or int(g) < 0): # Formatting needs ficing on Up/Down for time values
-            print("Rank: #{:0>2} Name [{}]: {} Price: ${:.2f} 1h ▼: {:.2f}% 24h ▼: {:.2f}% 7d ▼: {:.2f}% Last Updated: {}".format(a,b,c,d,e,f,g,h))
+            print("Rank: #{:0>2} Name [{}]: {}\tPrice: ${:.2f}\t\t1h ▼: {:.2f}%\t24h ▼: {:.2f}% 7d ▼: {:.2f}%\tLast Updated: {}".format(a,b,c,d,e,f,g,h))
         else:
-            print("Rank: #{:0>2} Name [{}]: {} Price: ${:.2f} 1h ▲: {:.2f}% 24h ▲: {:.2f}% 7d ▲: {:.2f}% Last Updated: {}".format(a,b,c,d,e,f,g,h))            
+            print("Rank: #{:0>2} Name [{}]: {}\tPrice: ${:.2f}\t1h ▲: {:.2f}%\t24h ▲: {:.2f}% 7d ▲: {:.2f}%\tLast Updated: {}".format(a,b,c,d,e,f,g,h))            
 except (ConnectionError, Timeout, TooManyRedirects) as ex:
     print(ex)
