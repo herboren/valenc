@@ -45,6 +45,10 @@ def confparams():
     # Return Params to print                        
     return entry
 
+# Return proper caret for negative/positive value
+def caret(value):
+    return '▼' if float(value) < 0.0 else '▲'
+
 header = {
     'Accepts':'application/json',
     'X-CMC_PRO_API_KEY': os.environ.get('VAL_CMC_API')
@@ -84,11 +88,7 @@ try:
                     entry['quote']['USD']['last_updated']))
 
     # Create string value, append changes before printing final string            
-    for a,b,c,d,e,f,g,h in statist:           
-        caretE= '▼' if float(e) < 0.0 else '▲'
-        caretF= '▼' if float(f) < 0.0 else '▲'
-        caretG= '▼' if float(g) < 0.0 else '▲'
-                
-        print(f'\nLast Updated: {h}\nRank: #{a:0>2}  [{b}]: {c}  Price: ${d:.2f}\n 1h: {caretE} {e:.2f}%\t24h: {caretF} {f:.2f}%\t7d: {caretG} {g:.2f}%')        
+    for a,b,c,d,e,f,g,h in statist:                   
+        print(f'\nLast Updated: {h}\n  Rank: #{a:0>2}  [{b}]: {c}  Price: ${d:.2f}\n   1h: {caret(e)} {e:.2f}%\t24h: {caret(f)} {f:.2f}%\t7d: {caret(g)} {g:.2f}%')        
 except (ConnectionError, Timeout, TooManyRedirects) as ex:
     print(ex)
