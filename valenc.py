@@ -1,4 +1,5 @@
 import configparser
+from functools import cached_property
 from pathlib import Path
 from usrconf import Conf
 from requests import Session
@@ -53,9 +54,9 @@ session = Session()
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?'
 session.headers.update(header)    
 
-try:    
+try: 
     response = session.get(url, params=confparams())   
-    kvp = []
+    statist = []    
         
     data = json.loads(response.text)
     # Get users coin request
@@ -73,7 +74,7 @@ try:
     for entry in data['data']:
         for el in acronyms:
             if el.upper() == entry['symbol']:                
-                kvp.append((entry['cmc_rank'],
+                statist.append((entry['cmc_rank'],
                     entry['symbol'],
                     entry['name'],
                     entry['quote']['USD']['price'],
@@ -82,11 +83,12 @@ try:
                     entry['quote']['USD']['percent_change_7d'],
                     entry['quote']['USD']['last_updated']))
 
-        # Create string value, append changes before printing final string        
-    for a,b,c,d,e,f,g,h in kvp:   
-        if (int(e) or int(f) or int(g) < 0): # Formatting needs ficing on Up/Down for time values
-            print("Rank: #{:0>2} Name [{}]: {}\tPrice: ${:.2f}\t\t1h ▼: {:.2f}%\t24h ▼: {:.2f}% 7d ▼: {:.2f}%\tLast Updated: {}".format(a,b,c,d,e,f,g,h))
-        else:
-            print("Rank: #{:0>2} Name [{}]: {}\tPrice: ${:.2f}\t1h ▲: {:.2f}%\t24h ▲: {:.2f}% 7d ▲: {:.2f}%\tLast Updated: {}".format(a,b,c,d,e,f,g,h))            
+    # Create string value, append changes before printing final string            
+    for a,b,c,d,e,f,g,h in statist:           
+        caretE= '▼' if float(e) < 0.0 else '▲'
+        caretF= '▼' if float(f) < 0.0 else '▲'
+        caretG= '▼' if float(g) < 0.0 else '▲'
+                
+        print(f'\nLast Updated: {h}\nRank: #{a:0>2}  [{b}]: {c}  Price: ${d:.2f}\n 1h: {caretE} {e:.2f}%\t24h: {caretF} {f:.2f}%\t7d: {caretG} {g:.2f}%')        
 except (ConnectionError, Timeout, TooManyRedirects) as ex:
     print(ex)
