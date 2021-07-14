@@ -1,10 +1,14 @@
 import configparser
 from functools import cached_property
 from pathlib import Path
+
+from colorama.ansi import Fore
 from usrconf import Conf
 from requests import Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json, os
+import colorama
+from colorama import Style
 
 # Create settings for user on first run
 if not Path('settings.ini').is_file():
@@ -47,7 +51,7 @@ def confparams():
 
 # Return proper caret for negative/positive value
 def caret(value):
-    return '▼' if float(value) < 0.0 else '▲'
+    return f'{Style.BRIGHT}{Fore.RED}▼ {value:.2f}%{Fore.WHITE}' if float(value) < 0.0 else f'{Fore.GREEN}▲ {value:.2f}%{Fore.WHITE}'
 
 header = {
     'Accepts':'application/json',
@@ -89,6 +93,6 @@ try:
 
     # Create string value, append changes before printing final string            
     for a,b,c,d,e,f,g,h in statist:                   
-        print(f'\nLast Updated: {h}\n  Rank: #{a:0>2}  [{b}]: {c}  Price: ${d:.2f}\n   1h: {caret(e)} {e:.2f}%\t24h: {caret(f)} {f:.2f}%\t7d: {caret(g)} {g:.2f}%')        
+        print(f'\nLast Updated: {h}\n  {Fore.MAGENTA}Rank: #{a:0>2}  {Fore.CYAN}[{b}]: {c}  {Fore.YELLOW}Price: ${d:.2f}\n{Fore.WHITE}   1h: {caret(e)} 24h: {caret(f)} 7d: {caret(g)}')        
 except (ConnectionError, Timeout, TooManyRedirects) as ex:
     print(ex)
