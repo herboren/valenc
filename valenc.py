@@ -1,14 +1,12 @@
-import configparser
-from functools import cached_property
+import json, os, configparser
+from colorama import Style
 from pathlib import Path
-
 from colorama.ansi import Fore
 from usrconf import Conf
 from requests import Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-import json, os
-import colorama
-from colorama import Style
+
+
 
 # Create settings for user on first run
 if not Path('settings.ini').is_file():
