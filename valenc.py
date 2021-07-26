@@ -1,18 +1,15 @@
-import json, os, configparser
-from colorama import Style
-from pathlib import Path
-from colorama.ansi import Fore
-from usrconf import Conf
-from requests import Session
-from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-
-
+import configparser, json, os
+from pathlib import *
+from colorama import *
+from usrconf import *
+from requests import *
+from requests.exceptions import *
 
 # Create settings for user on first run
 if not Path('settings.ini').is_file():
     Conf().saveconf()
 
-# Construct URL, debugging only
+# Construct URN, debugging only
 def cnstr_url(entry):
     url = ['https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?']
 
@@ -26,7 +23,7 @@ def cnstr_url(entry):
     # Return user parameterized URL    
     return '&'.join(url).replace('?&','?')
 
-# Import user parameters from settings.ini
+# Import user parameters from settings.ini to session response
 def confparams():    
     conf = configparser.ConfigParser()
     conf.read('settings.ini')
@@ -38,11 +35,16 @@ def confparams():
             for sattrb, svalue in conf.items(section):
                 if svalue != '':
                     entry[sattrb]=svalue
-        
+                elif svalue == '' and 'CMC_PRO_API_KEY' in sattrb:
+                    entry[sattrb]=os.environ.get('CMC_VAL_API')
+
         # Assign default parameters if no user paramters
         elif section == 'FUNCTION':            
             for sattrb, svalue in conf.items(section):                
+                if svalue != '':
                     entry[sattrb]=svalue
+                elif svalue == '' and 'CMC_PRO_API_KEY' in sattrb:
+                    entry[sattrb]=os.environ.get('CMC_VAL_API')
     
     # Return Params to print                        
     return entry
@@ -51,21 +53,30 @@ def confparams():
 def caret(value):
     return f'{Style.BRIGHT}{Fore.RED}▼ {value:.2f}%{Fore.WHITE}' if float(value) < 0.0 else f'{Fore.GREEN}▲ {value:.2f}%{Fore.WHITE}'
 
+# Default uniform resource name
+url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?'
+
+# Http header to pass to server
 header = {
     'Accepts':'application/json',
     'X-CMC_PRO_API_KEY': os.environ.get('VAL_CMC_API')
 }
 
+# Session request for authorization over TCP connection
 session = Session()
-url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?'
+
+# Update header for request
 session.headers.update(header)    
 
 try: 
-    response = session.get(url, params=confparams())   
+    # Initiate response, get information from server
+    response = session.get(url, params=confparams())
+
+    # Store JSON values   
     statist = []    
         
     data = json.loads(response.text)
-    # Get users coin request
+    # Get users coin request, unlimited coin names
     acronyms = input("Input top 5 coins separated by comma\nto search (btc,ada,dot,eth,atom): ")
     acronyms = acronyms.split(',')
 

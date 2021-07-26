@@ -4,14 +4,17 @@ class Conf():
 
     # Create default config       
     def saveconf(self):
-        config = configparser.ConfigParser()  
-
+        config = configparser.RawConfigParser()  
+        # Maintains case sensitivity
+        config.optionxform=str
+        
         # Assign default config for basic output
         config['FUNCTION'] = {
             'start': 1,
             'limit': 10,
             'price_min': 0,
-            'price_max': 100000            
+            'price_max': 100000,    
+            'CMC_PRO_API_KEY':''
         }
 
         config['USER'] = {
@@ -33,7 +36,8 @@ class Conf():
             'sort_dir':'',
             'cryptocurrency_type':'',
             'tag':'',
-            'aux':'',            
+            'aux':'',     
+            'CMC_PRO_API_KEY':''           
         }
         
         # Save config
