@@ -79,7 +79,7 @@ try:
     # Get users coin request, unlimited coin names
     acronyms = input("Input top 5 coins separated by comma\nto search (btc,ada,dot,eth,atom): ")
     acronyms = acronyms.split(',')
-
+  
     # Lets get symbolic data compare to elements   
     """
     Getting nested Entries:
@@ -101,7 +101,10 @@ try:
                     entry['quote']['USD']['last_updated']))
 
     # Create string value, append changes before printing final string            
-    for a,b,c,d,e,f,g,h in statist:                   
-        print(f'\nLast Updated: {h}\n  {Fore.MAGENTA}Rank: #{a:0>2}  {Fore.CYAN}[{b}]: {c}  {Fore.YELLOW}Price: ${d:.2f}\n{Fore.WHITE}   1h: {caret(e)} 24h: {caret(f)} 7d: {caret(g)}')        
+    for a,b,c,d,e,f,g,h in statist:                        
+        print(f'\nLast Updated: {h}\n  {Fore.MAGENTA}Rank: #{a:0>2}  {Fore.CYAN}[{b}]: {c}  {Fore.YELLOW}Price: ${d:.2f}\n{Fore.WHITE}   1h: {caret(e)} 24h: {caret(f)} 7d: {caret(g)}')                
 except (ConnectionError, Timeout, TooManyRedirects) as ex:
     print(ex)
+
+
+    
